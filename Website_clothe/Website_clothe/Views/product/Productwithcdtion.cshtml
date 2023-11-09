@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Website_clothe.Models.Sanpham>
+
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="card-item">
+            <div class="card-img-item">
+                <img src="~/Content/img/kisd_dichoi.jpg" width="200" height="200" />
+                <button class="card-btn-item">Thêm vào giỏ hàng</button>
+            </div>
+            <div class="card-main">
+                <p>@item.Tensanpham</p>
+                <p>@item.Giaban - đ</p>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div>
+        <p>Không có dữ liệu vui lòng kiểm tra lại bộ lọc tìm kiếm</p>
+    </div>
+}
+
+
+

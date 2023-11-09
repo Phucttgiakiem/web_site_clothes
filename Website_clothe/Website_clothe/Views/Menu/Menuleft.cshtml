@@ -1,0 +1,252 @@
+﻿@model IEnumerable<Website_clothe.Models.Loai>
+@{ 
+    var item1 = ViewBag.size;
+    
+    var item3 = ViewBag.thuonghieu;
+}
+
+<div class="container-filter col-2">
+    <p>Bộ lọc</p>
+    <div class="choosehistory">
+        <p>Đã chọn</p>
+        <div id="main-chhis">
+
+        </div>
+    </div>
+    <div class="sidebar_type_and_size d-flex flex-column">
+        @if (Model != null && Model.Any())
+        {
+            foreach(var item in Model){
+                <div>
+                    <a style="text-decoration:none; color:rgb(27, 27, 27); font-size:20px" href="#">@item.Tenloai</a>
+                </div>
+                <ul class="d-flex flex-row flex-wrap justify-content-between p-0">
+
+                    @foreach (var sub in item1)
+                    {
+                        if (sub.ID_Loai == item.ID_Loai)
+                        {
+                            <li id="@item.ID_Loai" class="sub_size"><a class="itemfl" href="#" >@sub.TenSize</a></li>
+                        }
+
+                    }
+                </ul>
+            }
+        }
+    </div>
+    <div class="order_sidebar d-flex flex-column">
+        <div class="trademark1234 d-flex flex-column">
+            <p>Thương hiệu</p>
+            @foreach(var item in item3)
+            {
+                <a href="/product/Findproductwithbrand?idthuonghieu=@item.Mathuonghieu">@item.Tenthuonghieu</a>
+            }
+        </div>
+        <div class="wrapper">
+            <div class="title-price">
+                <p>Khoảng giá (đv: đồng)</p>
+            </div>
+            <div class="price-in">
+                <div class="field">
+                    <input type="number" class="in-min" value="0" />
+
+                </div>
+                <div class="field">
+                    <input type="number" class="in-max" value="1500000" />
+
+                </div>
+            </div>
+            <div class="slider_x">
+                <div class="pro"></div>
+            </div>
+            <div class="range-in">
+                <input type="range" class="range-min" min="0" max="1500000" value="0" />
+                <input type="range" class="range-min" min="0" max="1500000" value="1500000" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var selectedConditions = {
+        sizes: "",
+        minPrice: 0,
+        maxPrice: 0
+    };
+
+    var isFirstLoad = true; // Biến flag
+
+    function updateSelectedConditions() {
+        var selectedSizes = selectedConditions.sizes;
+        var selectedPrice = selectedConditions.minPrice + ' - ' + selectedConditions.maxPrice;
+
+        var selectedConditionsDiv = document.getElementById('main-chhis');
+        selectedConditionsDiv.innerHTML = '';
+        //tạo div cha
+        // var div = document.createElement('div');
+        if (!(selectedConditions.minPrice == selectedConditions.maxPrice)) {
+            //tao div cha1 cua price
+            var div_chidren1 = document.createElement('div');
+            div_chidren1.className = "h_price";
+
+            //tao span1 chứa text price
+            var span1 = document.createElement("span");
+            span1.className = "text_h-price";
+            span1.textContent = selectedPrice;
+
+            //tao nut close
+            var i = document.createElement("i");
+            i.className = "fas";
+            i.className += " fa-times";
+            i.className += " closetab";
+            i.style.marginRight = "10px";
+            i.style.marginTop = "3px";
+
+            i.addEventListener("click", () => {
+                actionclosetoothofsub(div_chidren1);
+            })
+            //add cac phan tử vào div cha con
+            div_chidren1.appendChild(i);
+            div_chidren1.appendChild(span1);
+
+
+            selectedConditionsDiv.appendChild(div_chidren1);
+            //add cac phan tử vào div cha lon
+            //   div.appendChild(div_chidren1);
+        }
+        if (selectedConditions.sizes != "") {
+            //tao div cha2 cua size
+            var div_chidren2 = document.createElement("div");
+            div_chidren2.className = "h_size";
+
+            //tao nut close
+            var i = document.createElement("i");
+            i.className = "fas";
+            i.className += " fa-times";
+            i.className += " closetab";
+            i.style.marginRight = "10px";
+            i.style.marginTop = "3px";
+            i.addEventListener("click", () => {
+
+                actionclosetoothofsub(div_chidren2);
+            })
+
+            //tao span2 chứa text size
+            var span2 = document.createElement("span");
+            span2.className = "text_h-price";
+            span2.textContent = selectedSizes
+
+            div_chidren2.appendChild(i);
+            div_chidren2.appendChild(span2);
+
+            //   div.appendChild(div_chidren2);
+            selectedConditionsDiv.appendChild(div_chidren2);
+        }
+
+
+    }
+
+    function valumnofprice() {
+        const rangein = document.querySelectorAll('.range-in input');
+        const pricein = document.querySelectorAll('.price-in input');
+        const progress = document.querySelector('.slider_x .pro');
+
+        let price = 1000;
+
+        rangein.forEach(input => {
+            input.addEventListener('input', e => {
+                let minVal = parseInt(rangein[0].value);
+                let maxVal = parseInt(rangein[1].value);
+
+                // Tính khoảng cách giữa hai đầu
+                let range = maxVal - minVal;
+
+                // Nếu khoảng cách nhỏ hơn hoặc bằng "price," ngăn đầu kia thay đổi giá trị
+                if (range <= price) {
+                    if (e.target === rangein[0]) {
+                        rangein[1].value = minVal + price;
+                    } else {
+                        rangein[0].value = maxVal - price;
+                    }
+                } else {
+                    pricein[0].value = minVal;
+                    pricein[1].value = maxVal;
+                    progress.style.left = (minVal / rangein[0].max) * 100 + '%';
+                    progress.style.right = 100 - (maxVal / rangein[1].max) * 100 + '%';
+                }
+                selectedConditions.minPrice = minVal;
+                selectedConditions.maxPrice = maxVal;
+                if (!isFirstLoad) {
+
+                    updateSelectedConditions();
+                    setTimeout(sendDataToServer(), 2000);
+
+                } else {
+
+                    isFirstLoad = false;
+                }
+            });
+
+           
+
+
+        });
+    }
+
+    function getvalueinchoose() {
+        var aElements = document.querySelectorAll('.itemfl');
+        // var parentDiv = document.getElementById('main-chhis');
+
+
+        aElements.forEach(function (a) {
+            var liElement = a.parentElement;
+
+            a.addEventListener('click', function () {
+                var size = liElement.id + "-" + a.innerText;
+
+                
+                selectedConditions.sizes = size;
+
+                
+                updateSelectedConditions();
+                setTimeout(sendDataToServer(), 2000);
+                
+            });
+        });
+    }
+
+    function sendDataToServer() {
+        
+
+        $.ajax({
+            url: '/product/Productwithchtion',
+            type: 'POST',
+            data: JSON.stringify(selectedConditions),
+            contentType: 'application/json; charset=utf-8',
+        }).done(function (response) {
+            $(".main-product").html("");
+            $(".main-product").html(response);
+         
+        })
+        
+    }
+    function actionclosetoothofsub(sub) {
+        if (sub) {
+            sub.remove();
+            if (sub.className === "h_price") {
+                // Nếu là phần tử h_price được xóa, cập nhật dữ liệu giá
+                selectedConditions.minPrice = 0;
+                selectedConditions.maxPrice = 0;
+            } else if (sub.className === "h_size") {
+                // Nếu là phần tử h_size được xóa, cập nhật dữ liệu kích thước
+                selectedConditions.sizes = "";
+            }
+            setTimeout(sendDataToServer(), 2000);
+ 
+        }
+    }
+    valumnofprice();
+    getvalueinchoose();
+
+
+</script>

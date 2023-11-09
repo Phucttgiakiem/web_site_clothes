@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Website_clothe.Models.Danhmucsanpham>
+@{
+    var kq = ViewBag.ctdm;
+}
+
+
+<div id="header">
+    <a href="#" class="logo">FASHIONSHOP</a>
+    <div id="mobile-menu" class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+    </div>
+    <nav class="header__navbar">
+        <ul class="header___navbar-list">
+            <li class="header__navbar-item">
+                <a href="/Home/Index" class="header__navbar-item-link">Trang chủ</a>
+            </li>
+            <li class="header__navbar-item">
+                <a href="/Home/Index" class="header__navbar-item-link">Danh mục</a>
+                <div class="sub-nav">
+                    @foreach (var item in Model)
+                    {
+                        <ul>
+                            <li><a href="#">@item.Tendanhmuc</a></li>
+                            @foreach (var item2 in kq)
+                            {
+                                if (item2.Madanhmuc == item.Madanhmuc)
+                                {
+                                    <li>
+                                        <a class="" href="/CategoryTool/productwithdetailcatagory?idct=@item2.ID_Chitietdanhmuc">@item2.Tenchitietdanhmuc</a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    }
+                </div>
+
+
+            </li>
+            <li class="header__navbar-item">
+                <a href="#" class="header__navbar-item-link">Liên hệ</a>
+            </li>
+        </ul>
+        <div class="header___search">
+            <form id="searchForm" action="/product/Findproductwithtextbox" method="get">
+                <input id="searchInput" class="px-1" type="text" placeholder="Tìm kiếm" name="findpd"/>
+              
+                    <button type="button" onclick="submitForm()" style="border: 0; background-color: rgb(231, 231, 231);outline:none;padding:0;width:min-content;margin-right:3px">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    
+             
+            </form>
+        </div>
+        <ul class="header___navbar-list">
+            <li class="header__navbar-item">
+                <a href="#" class="item--sub">
+                    <i class="fas fa-shopping-cart"></i>
+                    @*<span>Giỏ hàng</span>*@
+                    <p class="">Giỏ hàng</p>
+                </a>
+            </li>
+            <li class="header__navbar-item">
+                <a href="#" class=" item--sub">
+                    <i class="far fa-user-circle"></i>
+                    @*<span>Đăng nhập</span>*@
+                    <p class="">Đăng nhập</p>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+<script>
+    var header = document.getElementById("header");
+    var mobilemenu = document.getElementById("mobile-menu");
+    var headerHeight = header.clientHeight;
+    mobilemenu.onclick = function () {
+        var isClosed = header.clientHeight === headerHeight;
+        if (isClosed) {
+            header.style.height = 'auto';
+        }
+        else {
+            header.style.height = null;
+        }
+
+    }
+    //tự động đóng khi chọn menu
+    var menuItems = document.querySelectorAll('a[href*="#"]');
+    for (var i = 0; i < menuItems.length; i++) {
+        var menuItem = menuItems[i];
+        console.log(menuItem.nextElementSibling);
+
+        menuItem.onclick = function (event) {
+            var isParentMenu = this.nextElementSibling && this.nextElementSibling.classList.contains("sub-nav");
+            if (isParentMenu) {
+                event.preventDefault();
+            } else {
+                header.style.height = null;
+            }
+        }
+    }
+    //function getinfo() {
+    //    var kq = document.querySelector(".fa-search");
+    //    kq.addEventListener("click", () => {
+    //        var text = kq.parentElement.firstElementChild.value;
+    //        $.ajax({
+    //            url: '/product/Findproductwithtextbox',
+    //            type: 'POST',
+    //            data: {
+    //                findpd: text
+    //            }
+    //        }).done((res) => {
+    //            // Chuyển hướng đến URL đã được trả về từ controller
+    //            window.location.href = res;
+    //        });
+
+    //    })
+    //}
+    //getinfo();
+    function submitForm() {
+        var searchInput = document.getElementById("searchInput").value;
+
+        // Kiểm tra xem input có giá trị hay không
+        if (searchInput.trim() !== "") {
+            // Nếu có giá trị, submit form
+            document.getElementById("searchForm").submit();
+        }
+    }
+</script>
