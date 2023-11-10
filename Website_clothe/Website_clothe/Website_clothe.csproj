@@ -257,6 +257,10 @@
     <Content Include="Content\Client\js\swiper-bundle.min.js" />
     <Content Include="Content\dropdownmenu.css" />
     <Content Include="Content\img\1._cnf_tri_an_top_banner_desktop.png" />
+    <Content Include="Content\img\aothunblue.jpg" />
+    <Content Include="Content\img\aothuntrangden.jpg" />
+    <Content Include="Content\img\aothunvang.jpg" />
+    <Content Include="Content\img\aothunxam.jpg" />
     <Content Include="Content\img\avatar.jpg" />
     <Content Include="Content\img\boy_congso.jpg" />
     <Content Include="Content\img\boy_macnha.jpg" />
